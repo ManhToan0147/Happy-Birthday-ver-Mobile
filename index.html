@@ -11,18 +11,17 @@
             box-sizing: border-box;
         }
 
-        body {
-            height: 100vh;
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+        html, body {
+            height: 100%;
             overflow: hidden;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
             font-family: 'Arial', 'Helvetica', sans-serif;
             position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             -webkit-user-select: none;
             user-select: none;
-            padding: 10px;
         }
 
         /* Canvas cho pháo hoa - Layer thấp nhất */
@@ -34,7 +33,7 @@
             pointer-events: none;
         }
 
-        /* Audio Controls - ỞI TRÊN CÙNG */
+        /* Audio Controls */
         .audio-controls {
             position: fixed;
             top: 10px;
@@ -88,29 +87,31 @@
             cursor: pointer;
         }
 
-        /* Khung chính - FULL MOBILE LAYOUT với HEIGHT CỐ ĐỊNH */
+        /* Main container - ABSOLUTE POSITIONING */
         .main-frame {
-            width: 100%;
-            max-width: 500px;
-            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(5px);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
             z-index: 100;
         }
 
-        /* Header với title và avatar */
+        /* Header - FIXED HEIGHT */
         .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
             display: flex;
             align-items: center;
             padding: 50px 15px 15px 15px;
             background: rgba(0, 0, 0, 0.2);
             border-bottom: 2px solid rgba(255, 215, 0, 0.3);
             z-index: 150;
-            flex-shrink: 0;
         }
 
         .avatar-frame {
@@ -145,7 +146,7 @@
         .avatar {
             width: 100%;
             height: 100%;
-            background: url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&h=300&fit=crop&crop=face') center/cover;
+            background: url('https://scontent.fhan14-4.fna.fbcdn.net/v/t39.30808-6/486556504_1757827518099935_4397397881058653122_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=L1bHFPFRaYcQ7kNvwH6kzbE&_nc_oc=AdlxFWIcoTh9joEgRVegThO6mJvGnp5kiqrKuWpJJG-pbx2oiR2pT2V4GNfjEH7463RWnlyp4U_qfBc4MDcZT-2A&_nc_zt=23&_nc_ht=scontent.fhan14-4.fna&_nc_gid=5yxB3HQ0WpQ8t58issbV2g&oh=00_AfWEQFWROP6Cdsu98S0GZ89UGbrGE0FGphPOQP9vnTu_5Q&oe=68B8B264') center/cover;
         }
 
         .birthday-title {
@@ -177,20 +178,22 @@
             }
         }
 
-        /* Content area - HEIGHT ĐƯỢC TÍNH TOÁN */
+        /* Content area - CALCULATED HEIGHT */
         .content-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
+            position: absolute;
+            top: 100px;
+            left: 0;
+            right: 0;
+            bottom: 80px;
+            overflow: hidden;
         }
 
-        /* Text container - GIỚI HẠN HEIGHT */
+        /* Text container */
         .text-container {
-            flex: 1;
+            width: 100%;
+            height: 100%;
             overflow-y: auto;
-            padding: 20px 15px 20px 15px;
-            min-height: 0;
+            padding: 20px 15px;
         }
 
         .text-container::-webkit-scrollbar {
@@ -225,13 +228,14 @@
             to { opacity: 1; }
         }
 
-        /* Bánh sinh nhật - Mobile */
+        /* Bánh sinh nhật */
         .cake-container {
             display: none;
+            width: 100%;
+            height: 100%;
             text-align: center;
             animation: cakeAppear 2s ease-in-out;
             padding: 30px 20px;
-            flex: 1;
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -341,15 +345,21 @@
             line-height: 1.4;
         }
 
-        /* Bottom buttons - CỐ ĐỊNH Ở CUỐI */
+        /* Bottom button - FIXED POSITION */
         .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
             padding: 15px;
             background: rgba(0, 0, 0, 0.3);
             border-top: 2px solid rgba(255, 215, 0, 0.3);
             display: flex;
             justify-content: center;
-            flex-shrink: 0;
+            align-items: center;
             backdrop-filter: blur(10px);
+            z-index: 150;
         }
 
         .nav-btn {
@@ -380,7 +390,7 @@
             opacity: 0;
         }
 
-        /* Auto-play modal - Mobile */
+        /* Auto-play modal */
         .autoplay-modal {
             position: fixed;
             top: 0;
@@ -423,17 +433,6 @@
         .autoplay-content button:active {
             transform: scale(0.95);
         }
-
-        /* ENSURE SAFE AREA FOR iOS */
-        @supports (padding: max(0px)) {
-            .header {
-                padding-top: max(50px, env(safe-area-inset-top, 50px));
-            }
-            
-            .bottom-nav {
-                padding-bottom: max(15px, env(safe-area-inset-bottom, 15px));
-            }
-        }
     </style>
 </head>
 <body>
@@ -459,9 +458,9 @@
     <!-- YouTube Player (Hidden) -->
     <div class="youtube-player" id="youtubePlayer"></div>
 
-    <!-- Khung chính Mobile -->
+    <!-- Main container -->
     <div class="main-frame">
-        <!-- Header với avatar và title - CỐ ĐỊNH -->
+        <!-- Header - 100px height -->
         <div class="header">
             <div class="avatar-frame">
                 <div class="avatar"></div>
@@ -469,7 +468,7 @@
             <div class="birthday-title">CHÚC MỪNG SINH NHẬT!</div>
         </div>
 
-        <!-- Content area - FLEX GIỮA HEADER VÀ BUTTON -->
+        <!-- Content area - từ 100px đến -80px -->
         <div class="content-area">
             <div class="text-container" id="textContainer">
                 <div class="static-text">
@@ -493,7 +492,7 @@
             </div>
         </div>
 
-        <!-- Bottom navigation - CỐ ĐỊNH Ở CUỐI -->
+        <!-- Bottom button - 80px height -->
         <div class="bottom-nav">
             <button class="nav-btn" id="navBtn" onclick="toggleContent()">🎂 Xem Bánh Sinh Nhật</button>
         </div>
@@ -527,7 +526,7 @@
             } else {
                 // Show text
                 cakeContainer.style.display = 'none';
-                textContainer.style.display = 'flex';
+                textContainer.style.display = 'block';
                 navBtn.textContent = '🎂 Xem Bánh Sinh Nhật';
                 isShowingText = true;
             }
